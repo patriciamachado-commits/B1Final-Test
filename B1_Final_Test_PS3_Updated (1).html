@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B1 Final Test - PS3</title>
+    <style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#5B5091;min-height:100vh;padding:20px;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+.container{max-width:800px;margin:0 auto}
+.header{background:#fff;border-radius:20px;padding:30px;margin-bottom:20px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.2)}
+.header h1{color:#5B5091;font-size:1.5em;margin-bottom:10px}
+.header p{color:#666}
+.badge{background:#ef4444;color:#fff;padding:4px 12px;border-radius:20px;font-size:.8em}
+.level-badge{background:#5B5091;color:#fff;padding:6px 16px;border-radius:20px;font-size:.9em;display:inline-block;margin-bottom:15px}
+.card{background:#fff;border-radius:16px;padding:25px;margin-bottom:20px}
+.card h2{color:#5B5091;margin-bottom:15px}
+label{font-weight:600;color:#333;display:block;margin-bottom:8px}
+input[type="text"],select,textarea{width:100%;padding:14px;border:2px solid #e0e0e0;border-radius:12px;font-size:16px;margin-bottom:15px;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#5B5091}
+textarea{min-height:120px;resize:vertical}
+.btn{background:#5B5091;color:#fff;border:none;padding:14px 32px;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;width:100%;margin-top:10px}
+.btn:hover{background:#4a4080}
+.btn-orange{background:#F5A623}
+.btn-green{background:#22c55e}
+.section{display:none}
+.section.active{display:block}
+.question{background:#f8f9fa;border-radius:12px;padding:20px;margin:15px 0}
+.question-num{background:#5B5091;color:#fff;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;margin-right:10px;font-size:13px;flex-shrink:0}
+.question h4{margin-bottom:15px;color:#333;display:flex;align-items:flex-start;line-height:1.5}
+.question h4 span{flex:1}
+.option{padding:12px 15px;border:2px solid #e0e0e0;border-radius:10px;cursor:pointer;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.option:hover{border-color:#5B5091;background:#f3f0ff}
+.option.selected{border-color:#5B5091;background:#e8e4f5}
+.option.correct{border-color:#22c55e;background:#f0fdf4}
+.option.incorrect{border-color:#ef4444;background:#fef2f2}
+.circle{width:24px;height:24px;border:2px solid #ccc;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:12px;color:#666}
+.option.selected .circle{border-color:#5B5091;background:#5B5091;color:#fff}
+.option.correct .circle{background:#22c55e;border-color:#22c55e;color:#fff}
+.option.incorrect .circle{background:#ef4444;border-color:#ef4444;color:#fff}
+.progress{height:10px;background:#e0e0e0;border-radius:5px;margin-bottom:15px}
+.progress-bar{height:100%;background:linear-gradient(90deg,#5B5091,#7B6DB0);border-radius:5px;transition:width .3s}
+.progress-text{display:flex;justify-content:space-between;margin-bottom:8px;font-size:14px;color:#666}
+.score-card{background:linear-gradient(135deg,#5B5091,#7B6DB0);border-radius:20px;padding:35px;color:#fff;text-align:center}
+.score-big{font-size:4em;font-weight:700}
+.result-box{background:rgba(255,255,255,.15);border-radius:12px;padding:20px;margin-top:20px}
+.links-section{background:#fff;border-radius:16px;padding:25px;margin-top:20px}
+.links-section h3{color:#5B5091;margin-bottom:20px;text-align:center}
+.link-btn{display:block;padding:18px 20px;border-radius:12px;margin-bottom:15px;text-decoration:none;font-weight:600;text-align:center}
+.link-btn.survey{background:#9c27b0;color:#fff}
+.link-btn.premium{background:#22c55e;color:#fff}
+.link-btn.waitlist{background:#F5A623;color:#fff}
+.applied-msg{background:#f3f0ff;border:2px solid #5B5091;border-radius:12px;padding:15px;color:#5B5091;font-weight:600;text-align:center;margin-top:15px}
+.timer{background:#fff3cd;border:2px solid #ffc107;border-radius:12px;padding:15px;text-align:center;margin-bottom:20px}
+.timer-text{font-size:1.8em;font-weight:700;color:#856404}
+.timer.warning{background:#ffebee;border-color:#ef5350}
+.timer.warning .timer-text{color:#c62828}
+.instructions{background:#f3f0ff;border-left:4px solid #5B5091;padding:15px 20px;border-radius:0 12px 12px 0;margin-bottom:20px}
+.not-submitted{background:#ffebee;border:2px solid #ef5350;border-radius:12px;padding:20px;text-align:center}
+.not-submitted h3{color:#c62828;margin-bottom:10px}
+.not-submitted p{color:#333}
+.submitted-success{background:#e8f5e9;border:2px solid #66bb6a;border-radius:12px;padding:20px;text-align:center;display:none}
+.submitted-success h3{color:#2e7d32}
+.writing-prompt{background:#fff3cd;border:1px solid #ffc107;border-radius:12px;padding:20px;margin-bottom:20px}
+.writing-prompt h4{color:#856404;margin-bottom:10px}
+.word-count{text-align:right;color:#888;font-size:14px;margin-top:5px}
+.tab-warning{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column;color:#fff;text-align:center;padding:20px}
+.tab-warning.show{display:flex}
+.tab-warning h2{color:#ef4444;font-size:2em;margin-bottom:20px}
+.tab-warning p{font-size:1.2em;margin-bottom:30px;max-width:500px}
+.tab-warning .btn{width:auto;padding:15px 40px}
+.warning-count{background:#ef4444;color:#fff;padding:8px 15px;border-radius:8px;font-size:14px;display:inline-block;margin-left:10px}
+.integrity-notice{background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:10px 15px;margin-bottom:15px;font-size:14px;color:#856404}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="level-badge">CEFR Level B1 - Intermediate</div>
+        <h1>📝 PS3 Final Test <span class="badge">30 Questions</span></h1>
+        <p>Practical Skills 3 - Term 1/2026</p>
+    </div>
+
+    <div class="section active" id="start">
+        <div class="card">
+            <h2>Welcome to Your Final Test!</h2>
+            <div class="instructions">
+                <p><strong>📋 Instructions:</strong></p>
+                <ul style="padding-left:20px">
+                    <li>30 multiple-choice questions</li>
+                    <li>30 minutes to complete</li>
+                    <li>Writing section at the end</li>
+                </ul>
+            </div>
+            <div class="integrity-notice">
+                ⚠️ <strong>Academic Integrity:</strong> This test monitors for tab switching. Please stay on this page until you finish. Leaving the test tab will be recorded and reported to your teacher.
+            </div>
+            
+            <label>Your Full Name (This will be on your CERTIFICATE)</label>
+            <input type="text" id="studentName" placeholder="Enter your full name...">
+            
+            <label>Your Class</label>
+            <select id="studentClass">
+                <option value="">Select your class...</option>
+                <option value="3072-MW-11AM">3072 - Mon/Wed 11:00 AM (Laura)</option>
+                <option value="3074-MW-8PM">3074 - Mon/Wed 8:00 PM (Laura)</option>
+                <option value="3080-TTH-11AM">3080 - Tue/Thu 11:00 AM (Laura)</option>
+                <option value="3082-TTH-8PM">3082 - Tue/Thu 8:00 PM (Laura)</option>
+                <option value="3085-TTH-945PM">3085 - Tue/Thu 9:45 PM (Eunice)</option>
+            </select>
+            
+            <button class="btn" onclick="startTest()">Start Test →</button>
+        </div>
+    </div>
+
+    <div class="section" id="test">
+        <div class="card">
+            <div class="timer" id="timerBox">
+                <div>⏱️ Time Remaining <span class="warning-count" id="warningBadge" style="display:none">⚠️ Tab switches: <span id="warningNum">0</span></span></div>
+                <div class="timer-text" id="timer">30:00</div>
+            </div>
+            <div class="progress-text"><span>Progress</span><span id="answeredCount">0/30 answered</span></div>
+            <div class="progress"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+            <div id="questionsContainer"></div>
+            <button class="btn btn-orange" onclick="submitTest()" style="margin-top:25px">Submit Test & Continue to Writing ✓</button>
+        </div>
+    </div>
+
+    <div class="section" id="writing">
+        <div class="card">
+            <h2>✍️ Writing Section</h2>
+            <div class="timer" id="writingTimerBox">
+                <div>⏱️ Writing Time Remaining</div>
+                <div class="timer-text" id="writingTimer">10:00</div>
+            </div>
+            <div class="instructions" style="margin-bottom:20px">
+                <h4 style="color:#5B5091;margin-bottom:10px">📋 Writing Instructions — Read Carefully!</h4>
+                <ul style="padding-left:20px;line-height:2">
+                    <li>⏱️ You have <strong>10 minutes</strong> to complete this section</li>
+                    <li>📝 Choose <strong>ONE</strong> topic: write about your plans OR compare two products</li>
+                    <li>✅ Write <strong>at least 50 words</strong> (minimum requirement)</li>
+                    <li>📏 Aim for <strong>6–8 well-developed sentences</strong></li>
+                    <li>🎯 <strong>Scoring Goals for Maximum Points:</strong></li>
+                </ul>
+                <div style="background:#fff;border-radius:10px;padding:15px;margin-top:10px">
+                    <table style="width:100%;border-collapse:collapse;font-size:14px">
+                        <tr style="background:#5B5091;color:#fff">
+                            <th style="padding:8px;text-align:left;border-radius:8px 0 0 0">Criteria</th>
+                            <th style="padding:8px;text-align:center">Points</th>
+                            <th style="padding:8px;text-align:left;border-radius:0 8px 0 0">What We Look For</th>
+                        </tr>
+                        <tr style="background:#f8f9fa">
+                            <td style="padding:8px;font-weight:600">📖 Content & Ideas</td>
+                            <td style="padding:8px;text-align:center">5</td>
+                            <td style="padding:8px">Clear topic, relevant details, fully developed ideas</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:8px;font-weight:600">✏️ Grammar</td>
+                            <td style="padding:8px;text-align:center">5</td>
+                            <td style="padding:8px">Correct future tense (will, going to) and comparatives (cheaper, more expensive, better)</td>
+                        </tr>
+                        <tr style="background:#f8f9fa">
+                            <td style="padding:8px;font-weight:600">🔗 Organization</td>
+                            <td style="padding:8px;text-align:center">5</td>
+                            <td style="padding:8px">Logical order, clear introduction and conclusion, connectors (however, because, also, in addition)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:8px;font-weight:600">💬 Vocabulary</td>
+                            <td style="padding:8px;text-align:center">5</td>
+                            <td style="padding:8px">Varied vocabulary, topic-specific words, avoids repetition</td>
+                        </tr>
+                        <tr style="background:#ede7f6;font-weight:700">
+                            <td style="padding:8px">🏆 Total</td>
+                            <td style="padding:8px;text-align:center">20</td>
+                            <td style="padding:8px">Aim for 16+ points for an excellent score!</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="writing-prompt">
+                <h4>📝 Choose ONE topic and write 6–8 sentences (minimum 50 words):</h4>
+                <ul style="padding-left:20px">
+                    <li><strong>A:</strong> Write about your plans for the future (use <em>will</em> and <em>going to</em>)</li>
+                    <li><strong>B:</strong> Compare two products, places, or experiences (use comparatives: <em>cheaper, better, more expensive</em>)</li>
+                </ul>
+            </div>
+            <textarea id="writingAnswer" placeholder="I am going to travel to... It will be more exciting than..."></textarea>
+            <div class="word-count">Words: <span id="wordCount">0</span> <span id="wordMin" style="color:#ef4444;font-weight:600;display:none">— Minimum 50 words required</span><span id="wordOk" style="color:#22c55e;font-weight:600;display:none">✅ Minimum reached!</span></div>
+            <button class="btn btn-green" onclick="submitWriting()" style="margin-top:20px">Submit & See Results →</button>
+        </div>
+    </div>
+
+    <div class="section" id="results">
+        <div class="score-card">
+            <p style="opacity:.8">🎉 Test Complete!</p>
+            <div class="score-big" id="finalScore">0/30</div>
+            <div id="percentage" style="font-size:1.2em;margin-top:10px">0%</div>
+            <p id="studentDisplay" style="margin-top:15px"></p>
+            <div class="result-box"><h3>📊 Your Result</h3><p id="resultMessage"></p></div>
+        </div>
+        
+        <div class="card" style="margin-top:20px">
+            <div class="not-submitted" id="notSubmittedWarning"><h3>⚠️ NOT YET SUBMITTED</h3><p>Click below to submit</p></div>
+            <div class="submitted-success" id="submittedSuccess"><h3>✅ Submitted!</h3></div>
+            <button class="btn btn-orange" id="submitBtn" onclick="submitToTeacher()" style="margin-top:15px;font-size:18px;padding:18px">📤 Submit to Teacher</button>
+        </div>
+
+        <div class="links-section">
+            <h3>📋 What's Next?</h3>
+            <a href="https://f4m0tbsjd6f.typeform.com/to/niGGm7g7" target="_blank" class="link-btn survey">📊 Take Our Survey</a>
+            <a href="https://sqaeducation.org/upgrade-to-premium/" target="_blank" class="link-btn premium">⭐ Upgrade to Premium</a>
+            <a href="https://sqaeducation.org/login/" target="_blank" class="link-btn waitlist">⏳ Current Student Waitlist</a>
+            <div class="applied-msg">✅ Already applied? See you next term! 🎓</div>
+        </div>
+    </div>
+</div>
+
+<div class="tab-warning" id="tabWarning">
+    <h2>⚠️ Warning: You Left the Test!</h2>
+    <p>Leaving the test tab has been recorded. Your teacher will see this in your results.</p>
+    <button class="btn" onclick="dismissWarning()">Return to Test</button>
+</div>
+
+<script>
+const SESSION = 'B1 Final Test (PS3)';
+let studentName='',studentClass='',score=0,writingText='',timerInterval,timeLeft=30*60;
+let tabSwitchCount=0,testStarted=false,testSubmitted=false;
+let writingTimeLeft=10*60,writingTimerInterval;
+
+const originalQuestions = [
+    {q:"\"My son just turned 18. I need to help him open a new _______ at the bank.\"", opts:["Balance","Statement","Checking account","Withdraw"], correct:2},
+    {q:"\"______ you help me fill out this form, _______?\"", opts:["Can / please","Should / please","Should / thank you","Will / thanks"], correct:0},
+    {q:"Maria: How was your trip to Italy? Tom: It was amazing! My family and I ______ there during summer break.", opts:["was","are","is","were"], correct:3},
+    {q:"\"Dia de los muertos is ______ than Halloween.\"", opts:["more traditional","traditional less","traditionaler","tradition"], correct:0},
+    {q:"What are your plans for next week? I ______ go to the store to buy gifts.", opts:["am going to","going to","will to","am to"], correct:0},
+    {q:"What does \"to do the dishes\" mean?", opts:["To cook dinner","To clean the plates and cups after eating","To wash clothes","To put away groceries"], correct:1},
+    {q:"They ______ to buy the tickets tomorrow morning.", opts:["going","is going","are going","will to"], correct:2},
+    {q:"\"You ______ attend – the client is flying in specially.\"", opts:["would","might","must","could"], correct:2},
+    {q:"\"I was able to ______ a lower price. I paid only $150!\"", opts:["save","argues","discussing","negotiate"], correct:3},
+    {q:"\"This book is ______ than the one I read last week.\"", opts:["better","more good","gooder","well"], correct:0},
+    {q:"\"______ I please speak to the bank manager?\"", opts:["Could","Will","Should","Would"], correct:0},
+    {q:"What does \"get off\" mean?", opts:["To enter a bus or train","To leave a bus, train, or plane","To check into a hotel","To meet someone at the airport"], correct:1},
+    {q:"Which situation is a transportation problem?", opts:["Doing the laundry","The flight is canceled","Sweeping the floor","Making dinner"], correct:1},
+    {q:"\"Yesterday, I ______ a letter to my friend in Canada.\"", opts:["writed","writting","wrote","written"], correct:2},
+    {q:"\"This is the ______ restaurant in town.\"", opts:["best","better","good","more good"], correct:0},
+    {q:"\"She ______ travel to Japan next month!\"", opts:["is going to","will to","goes to","going to"], correct:0},
+    {q:"\"I have a short ______ about favorite holidays.\"", opts:["advice","text message","assigment","work"], correct:2},
+    {q:"\"You ______ go to the doctor if you feel sick.\"", opts:["should","might","could","work"], correct:0},
+    {q:"What does \"I missed my train\" mean?", opts:["You took the wrong train.","You got on too early.","You transferred to another line.","You didn't catch the train before it left."], correct:3},
+    {q:"\"Hi, ______ you tell me my appointment ______, ______?\"", opts:["Could / balance / please","Can / number / thanks","Could / details / please","Will / information / now"], correct:2},
+    {q:"\"We ______ to the park yesterday with the kids.\"", opts:["went","gone","going","go"], correct:0},
+    {q:"\"I have to renew my ______\" (before vacation)", opts:["passport","destination","packing list","bank account"], correct:0},
+    {q:"\"Next week, our class ______ start at 4:30 pm.\"", opts:["will","is going","shall","would"], correct:0},
+    {q:"\"She did not ______ to class yesterday.\"", opts:["came","come","coming","comes"], correct:1},
+    {q:"\"Hi! ______ I use your pen, please?\"", opts:["Could","Will","Should","Would"], correct:0},
+    {q:"\"You might want to ________ for a small __________.\"", opts:["look around / souvenir","pick up / transportation","get off / accommodation","check in / tour guide"], correct:0},
+    {q:"\"I have an appointment with the ______ about Tommy's grades.\"", opts:["schedule","classroom","teacher","student"], correct:2},
+    {q:"\"We ______ go to the flea market later today.\"", opts:["will going","is going to","will going to","will"], correct:3},
+    {q:"\"This one is ______ than that one.\"", opts:["more nice","nice","nicer","nicest"], correct:2},
+    {q:"\"I ____________ a ____________ to explore the city.\"", opts:["need to hire / tour guide","needs to hire / tour guide","need hiring / tour guide","need to hired / tour guide"], correct:0}
+];
+
+function shuffle(array){const arr=[...array];for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+let questions=[];
+
+function prepareQuestions(){
+    const shuffledIndices=shuffle([...Array(originalQuestions.length).keys()]);
+    questions=[];
+    shuffledIndices.forEach(origIndex=>{
+        const orig=originalQuestions[origIndex];
+        const optionsWithIndex=orig.opts.map((opt,i)=>({text:opt,wasCorrect:i===orig.correct}));
+        const shuffledOpts=shuffle(optionsWithIndex);
+        questions.push({q:orig.q,opts:shuffledOpts.map(o=>o.text),correct:shuffledOpts.findIndex(o=>o.wasCorrect)});
+    });
+}
+
+function startTest(){
+    studentName=document.getElementById('studentName').value.trim();
+    studentClass=document.getElementById('studentClass').value;
+    if(!studentName){alert('Please enter your full name');return;}
+    if(!studentClass){alert('Please select your class');return;}
+    prepareQuestions();renderQuestions();
+    document.getElementById('start').classList.remove('active');
+    document.getElementById('test').classList.add('active');
+    testStarted=true;startTimer();startAntiCheat();window.scrollTo(0,0);
+}
+
+function renderQuestions(){
+    let html='';
+    questions.forEach((q,i)=>{
+        html+=`<div class="question"><h4><span class="question-num">${i+1}</span><span>${q.q}</span></h4><div class="options">`;
+        q.opts.forEach((opt,j)=>{html+=`<div class="option" data-q="${i}" data-v="${j}" onclick="selectAnswer(this)"><div class="circle">${String.fromCharCode(65+j)}</div><span>${opt}</span></div>`;});
+        html+=`</div></div>`;
+    });
+    document.getElementById('questionsContainer').innerHTML=html;
+}
+
+function selectAnswer(el){document.querySelectorAll(`.option[data-q="${el.dataset.q}"]`).forEach(o=>o.classList.remove('selected'));el.classList.add('selected');updateProgress();}
+function updateProgress(){const a=document.querySelectorAll('.option.selected').length;document.getElementById('answeredCount').textContent=`${a}/30 answered`;document.getElementById('progressBar').style.width=`${(a/30)*100}%`;}
+function startTimer(){timerInterval=setInterval(()=>{timeLeft--;document.getElementById('timer').textContent=Math.floor(timeLeft/60)+':'+String(timeLeft%60).padStart(2,'0');if(timeLeft<=300)document.getElementById('timerBox').classList.add('warning');if(timeLeft<=0){clearInterval(timerInterval);submitTest();}},1000);}
+
+function startAntiCheat(){
+    document.addEventListener('contextmenu',e=>e.preventDefault());
+    document.addEventListener('copy',e=>e.preventDefault());
+    document.addEventListener('cut',e=>e.preventDefault());
+    document.addEventListener('keydown',e=>{if(e.ctrlKey&&['c','v','x','a','p'].includes(e.key))e.preventDefault();});
+    document.addEventListener('visibilitychange',()=>{if(document.hidden&&testStarted&&!testSubmitted){tabSwitchCount++;updateWarningBadge();document.getElementById('tabWarning').classList.add('show');}});
+    window.addEventListener('blur',()=>{if(testStarted&&!testSubmitted){tabSwitchCount++;updateWarningBadge();document.getElementById('tabWarning').classList.add('show');}});
+}
+function updateWarningBadge(){document.getElementById('warningBadge').style.display='inline';document.getElementById('warningNum').textContent=tabSwitchCount;}
+function dismissWarning(){document.getElementById('tabWarning').classList.remove('show');}
+
+function submitTest(){
+    clearInterval(timerInterval);testSubmitted=true;score=0;
+    questions.forEach((q,i)=>{
+        const sel=document.querySelector(`.option[data-q="${i}"].selected`);
+        if(sel){if(parseInt(sel.dataset.v)===q.correct){score++;sel.classList.add('correct');}else{sel.classList.add('incorrect');document.querySelector(`.option[data-q="${i}"][data-v="${q.correct}"]`).classList.add('correct');}}
+        else{document.querySelector(`.option[data-q="${i}"][data-v="${q.correct}"]`).classList.add('correct');}
+    });
+    document.getElementById('test').classList.remove('active');document.getElementById('writing').classList.add('active');startWritingTimer();window.scrollTo(0,0);
+}
+
+function startWritingTimer(){
+    writingTimerInterval=setInterval(()=>{
+        writingTimeLeft--;
+        const m=Math.floor(writingTimeLeft/60);
+        const s=String(writingTimeLeft%60).padStart(2,'0');
+        document.getElementById('writingTimer').textContent=m+':'+s;
+        if(writingTimeLeft<=180)document.getElementById('writingTimerBox').classList.add('warning');
+        if(writingTimeLeft<=0){clearInterval(writingTimerInterval);alert('⏰ Writing time is up! Your response will be submitted.');submitWriting();}
+    },1000);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{const w=document.getElementById('writingAnswer');if(w)w.addEventListener('input',function(){
+    const count=this.value.trim().split(/\s+/).filter(x=>x).length;
+    document.getElementById('wordCount').textContent=count;
+    if(count>0&&count<50){document.getElementById('wordMin').style.display='inline';document.getElementById('wordOk').style.display='none';}
+    else if(count>=50){document.getElementById('wordMin').style.display='none';document.getElementById('wordOk').style.display='inline';}
+    else{document.getElementById('wordMin').style.display='none';document.getElementById('wordOk').style.display='none';}
+});});
+
+function submitWriting(){
+    clearInterval(writingTimerInterval);
+    writingText=document.getElementById('writingAnswer').value.trim();
+    const wc=writingText.split(/\s+/).filter(x=>x).length;
+    if(wc<50&&!confirm('⚠️ You have only written '+wc+' words. The minimum is 50 words. Submit anyway?'))return;
+    if(writingText.length<20&&!confirm('Writing is short. Continue?'))return;
+    const pct=Math.round(score/30*100);
+    document.getElementById('finalScore').textContent=score+'/30';
+    document.getElementById('percentage').textContent=pct+'%';
+    document.getElementById('studentDisplay').textContent=studentName+' • '+studentClass;
+    document.getElementById('resultMessage').textContent=pct>=85?'🌟 Excellent! Ready for B2!':pct>=70?'👍 Solid B1.':pct>=50?'📚 Keep practicing.':'💪 More practice needed.';
+    document.getElementById('writing').classList.remove('active');document.getElementById('results').classList.add('active');window.scrollTo(0,0);
+}
+
+function submitToTeacher(){
+    const pct=Math.round(score/30*100);
+    const level=pct>=85?'B1+ Ready for B2':pct>=70?'B1':pct>=50?'B1-':'A2+';
+    const integrityNote=tabSwitchCount>0?` [⚠️ Tab switches: ${tabSwitchCount}]`:'';
+    const formData=new FormData();
+    formData.append('entry.1448652901',studentName+' ['+studentClass+']'+integrityNote);
+    formData.append('entry.1074820059',SESSION);
+    formData.append('entry.948848038',score+'/30');
+    formData.append('entry.55871862',pct+'%');
+    formData.append('entry.386745226',writingText+(tabSwitchCount>0?`\n\n[INTEGRITY NOTE: Student left test tab ${tabSwitchCount} time(s)]`:''));
+    formData.append('entry.1166198123',level);
+    fetch('https://docs.google.com/forms/d/e/1FAIpQLSdbBVpC7yn8QYq2cLwYP-O-XMITpJd6aX99S_8Mca3O-rUurQ/formResponse',{method:'POST',mode:'no-cors',body:formData}).then(()=>{
+        document.getElementById('notSubmittedWarning').style.display='none';
+        document.getElementById('submittedSuccess').style.display='block';
+        document.getElementById('submitBtn').style.display='none';
+    });
+}
+</script>
+</body>
+</html>
